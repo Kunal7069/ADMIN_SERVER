@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors(
   {
-    origin: 'http://localhost:3000', // Your frontend URL
+    origin: '*', // Your frontend URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   }
