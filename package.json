@@ -1,0 +1,25 @@
+{
+  "name": "redbus_server",
+  "version": "1.0.0",
+  "main": "server_admin.js",
+  
+  "scripts": {
+  "start": "node server_admin.js"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.4",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "firebase": "^10.13.0",
+    "firebase-admin": "^12.3.1",
+    "mongodb": "^6.8.0",
+    "puppeteer": "^23.1.1",
+    "socket.io": "^4.7.5",
+    "xlsx": "^0.18.5"
+  }
+}
