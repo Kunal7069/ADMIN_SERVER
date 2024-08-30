@@ -155,6 +155,7 @@ app.post("/get_bus_stations_coordinates", async (req, res) => {
     coordinates = [];
     for (let index = 0; index < result.length; index++) {
       coordinates.push({
+        name: result[index]["name"],
         lat: result[index]["latitude"],
         lng: result[index]["longitude"],
       });
