@@ -65,6 +65,17 @@ app.get("/get_bus_stations", async (req, res) => {
   }
 });
 
+app.get("/get_eloc", async (req, res) => {
+  try {
+    const collection = db.collection("BUS_STATION_ADDRESS");
+    const result = await collection.find({}).toArray();
+    
+    res.send(result);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting data", error });
+  }
+});
+
 app.post("/get_duration", async (req, res) => {
   try {
     const { start_station, end_station } = req.body; // Get input from user
