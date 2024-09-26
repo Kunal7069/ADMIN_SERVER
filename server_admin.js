@@ -165,7 +165,7 @@ app.post("/get_bus_stations_coordinates", async (req, res) => {
     const nearbyCoords = findCoordinatesWithinRange(
       live_coordinate,
       coordinates,
-      1
+      20
     );
     res.send(nearbyCoords);
   } catch (error) {
