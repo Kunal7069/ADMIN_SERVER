@@ -29,7 +29,7 @@ MongoClient.connect(url, {})
   });
 
 app.get("/", (req, res) => {
-  res.send("Hello App!");
+  res.json({ status: "MY-BUS BACKEND IS RUNNING" });
 });
 
 function getDayFromDate(dateString) {
@@ -169,6 +169,18 @@ app.post("/find_routes", async (req, res) => {
     res.status(500).json({ message: "Error getting data", error });
   }
 });
+
+async function periodicAPICall() {
+    try {
+        // Example API call, modify as needed
+        const response = await fetch('https://admin-server-1-bblq.onrender.com/'); // Replace with your API
+        const data = await response.json();
+        console.log('Periodic API call data:', data);
+    } catch (error) {
+        console.error('Error during periodic API call:', error);
+    }
+}
+setInterval(periodicAPICall, 10000); 
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
