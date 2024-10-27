@@ -174,8 +174,7 @@ async function periodicAPICall() {
     try {
         // Example API call, modify as needed
         const response = await fetch('https://admin-server-1-bblq.onrender.com/'); // Replace with your API
-        const data = await response.json();
-        console.log('Periodic API call data:', data);
+        console.log('Periodic API call data:', response);
     } catch (error) {
         console.error('Error during periodic API call:', error);
     }
