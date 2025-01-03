@@ -173,6 +173,39 @@ app.post("/get_bus_stations_coordinates", async (req, res) => {
   }
 });
 
+app.post("/save_cost", async (req, res) => {
+  try {
+    const collection = db.collection("COST_DETAILS");
+    
+    // Extract the list of cost details from the request body
+    const costDetailsList = req.body;
+
+    if (!Array.isArray(costDetailsList)) {
+      return res.status(400).json({ message: "Request body must be an array of cost details." });
+    }
+
+    // Validate and insert data
+    const validCostDetails = costDetailsList.filter((item) =>
+      item.busno && item.routeno && item.fromstation && item.tostation && item.cost !== undefined
+    );
+
+    if (validCostDetails.length === 0) {
+      return res.status(400).json({ message: "No valid cost details provided." });
+    }
+
+    // Insert data into the collection
+    const result = await collection.insertMany(validCostDetails);
+
+    // Send response
+    res.status(201).json({ message: "Cost details saved successfully.", insertedCount: result.insertedCount });
+  } catch (error) {
+    res.status(500).json({ message: "Error saving cost data", error: error.message });
+  }
+});
+
+
+
+
 app.get("/get_buses", async (req, res) => {
   try {
     
