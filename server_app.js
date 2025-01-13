@@ -130,6 +130,7 @@ app.post("/find_routes", async (req, res) => {
     const { start_station, end_station, date, time } = req.body;
     const collection = db.collection("BUS_ROUTE_TIMETABLE");
     const busDetailsCollection = db.collection("BUS_DETAILS");
+    const costDetailsCollection = db.collection("COST_DETAILS");
     const data = await collection.find({}).toArray();
     // const date = "2024-08-30";
     // const time = "00:00";
@@ -163,13 +164,24 @@ app.post("/find_routes", async (req, res) => {
         route.bustype = busDetails.bustype;
         route.totalseats = busDetails.totalseats;
       }
+      const costDetails = await costDetailsCollection.findOne({
+        busno: route.busno,
+        routeno: route.routeno,
+        fromstation: start_station,
+        tostation: end_station,
+      });
+
+      if (costDetails) {
+        route.cost = costDetails.cost;
+      } else {
+        route.cost = "N/A"; // If no cost details are found
+      }
     }
     res.send(filteredRoutes);
   } catch (error) {
     res.status(500).json({ message: "Error getting data", error });
   }
 });
-
 async function periodicAPICall() {
     try {
         // Example API call, modify as needed
