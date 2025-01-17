@@ -182,6 +182,73 @@ app.post("/find_routes", async (req, res) => {
     res.status(500).json({ message: "Error getting data", error });
   }
 });
+
+app.post("/token", async (req, res) => {
+    const { client_id, client_secret } = req.body;
+  
+    if (!client_id || !client_secret) {
+      return res.status(400).json({ message: "client_id and client_secret are required" });
+    }
+  
+    try {
+      const response = await axios.post(
+        "https://outpost.mappls.com/api/security/oauth/token",
+        new URLSearchParams({
+          grant_type: "client_credentials",
+          client_id,
+          client_secret,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "application/json",
+          },
+        }
+      );
+  
+      const access_token = response.data["access_token"];
+      const currentDateTime = new Date(); // Get the current date and time
+  
+      // Insert the token, date, and time into MongoDB
+      const tokenCollection = db.collection("TOKEN");
+      await tokenCollection.insertOne({
+        access_token,
+        created_at: currentDateTime,
+      });
+  
+      console.log("Access token saved to MongoDB:", access_token);
+  
+      // Send the token back to the client
+      res.status(200).json(response.data);
+    } catch (error) {
+      console.error("Error fetching OAuth token:", error.response?.data || error.message);
+      res.status(500).json({ message: "Failed to fetch OAuth token", error: error.response?.data || error.message });
+    }
+  });
+  
+  app.get("/latest_token", async (req, res) => {
+    try {
+      const tokenCollection = db.collection("TOKEN");
+  
+      // Fetch the latest token by sorting by created_at in descending order
+      const latestToken = await tokenCollection
+        .find({})
+        .sort({ created_at: -1 })
+        .limit(1)
+        .toArray();
+  
+      if (latestToken.length === 0) {
+        return res.status(404).json({ message: "No tokens found in the collection." });
+      }
+  
+      res.status(200).json(latestToken[0]);
+    } catch (error) {
+      console.error("Error fetching the latest token:", error);
+      res.status(500).json({ message: "Failed to fetch the latest token", error });
+    }
+  });
+  
+
 async function periodicAPICall() {
     try {
         // Example API call, modify as needed
